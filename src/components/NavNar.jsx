@@ -8,9 +8,11 @@ export const NavBar = () => (
     <Container>
       <Navbar.Brand href="#home">TechnoStore</Navbar.Brand>
       <Nav className="me-auto">
-        <Nav.Link href="#home">Home</Nav.Link>
-        <Nav.Link href="#features">Features</Nav.Link>
-        <Nav.Link href="#pricing">Pricing</Nav.Link>
+        <Nav.Link href="/">Home</Nav.Link>
+        <Nav.Link href="/category/Televisor">Televisores</Nav.Link>
+        <Nav.Link href="/category/Audifono">Audifonos</Nav.Link>
+        <Nav.Link href="/category/Proyector">Proyectores</Nav.Link>
+        <Nav.Link href="/category/Smartphone">Smartphones</Nav.Link>
       </Nav>
       <CartWidget />
     </Container>

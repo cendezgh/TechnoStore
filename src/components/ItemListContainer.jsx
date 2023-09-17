@@ -22,7 +22,7 @@ export const ItemListContainer = (props) => {
         setObjects(objectsFiltered);
       }
     });
-  }, []);
+  }, [id]);
 
   return (
     <Container className="mt-4">

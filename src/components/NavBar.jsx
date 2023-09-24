@@ -3,21 +3,38 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { CartWidget } from "./CartWidget";
 import { Link } from "react-router-dom";
-import data from "../data/objects.json";
 import { NavLink } from "react-router-dom";
 
-const categoriesArray = data.map(item => item.category);
-const uniqueCategories = new Set(categoriesArray); 
+import { useState, useEffect } from "react";
+import { getFirestore, getDocs, collection } from "firebase/firestore";
 
-export const NavBar = () => (
-  <Navbar bg="light" data-bs-theme="light">
-    <Container>
-      <Navbar.Brand as={Link} to="#home">TechnoStore</Navbar.Brand>
-      <Nav className="me-auto">
-        <Nav.Link href="/">Home</Nav.Link>
-        {[...uniqueCategories].map(category => (<Nav.Link as={NavLink} key={category} to={`/category/${category}`}>{category}</Nav.Link>))}
-      </Nav>
-      <CartWidget />
-    </Container>
-  </Navbar>
-);
+export const NavBar = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const db = getFirestore();
+      const categoriesCollection = collection(db, "productos");
+      const categoriesSnapshot = await getDocs(categoriesCollection);
+
+      const categoriesArray = categoriesSnapshot.docs.map(doc => doc.data().categoryId);
+      const uniqueCategories = Array.from(new Set(categoriesArray));
+
+      setCategories(uniqueCategories);
+    };
+
+    fetchCategories();
+  }, []);
+  return (
+    <Navbar bg="light" data-bs-theme="light">
+      <Container>
+        <Navbar.Brand as={Link} to="#home">TechnoStore</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href="/">Home</Nav.Link>
+          {categories.map(category => (<Nav.Link as={NavLink} key={category} to={`/category/${category}`}>{category}</Nav.Link>))}
+        </Nav>
+        <CartWidget />
+      </Container>
+    </Navbar>
+  );
+};

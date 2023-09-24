@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import { getFirestore, getDocs, collection } from "firebase/firestore";
+import { getFirestore, getDocs, collection, query, where } from "firebase/firestore";
 
 import { ItemList } from "./ItemList";
 
@@ -9,29 +9,39 @@ export const ItemListContainer = (props) => {
   const [objects, setObjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { id } = useParams();
+  const { id: category } = useParams();
 
   useEffect(() => {
-    const db = getFirestore()
+    const fetchProducts = async () => {
+      const db = getFirestore();
+      const productosCollection = collection(db, "productos");
 
-    const refCollection = collection(db, "productos")
+      let q;
 
-    getDocs(refCollection)
-      .then(snapshot => {
-        if (snapshot.size === 0) console.log("no results")
-        else
-          setObjects(
-            snapshot.docs.map(doc => {
-              return { id: doc.id, ...doc.data() }
-            })
-        )
-      })
-      .finally(() => {
+      if (category) {
+        q = query(productosCollection, where("categoryId", "==", category));
+      } else {
+        q = productosCollection;
+      }
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const products = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setObjects(products);
+      } catch (error) {
+        console.log("Error al obtener los productos:", error);
+      } finally {
         setLoading(false);
-      });
-  }, [id]);
+      }
+    };
 
-  if(loading) return <div>Loading...</div>
+    fetchProducts();
+  }, [category]);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <Container className="mt-4">
@@ -49,3 +59,5 @@ export const ItemListContainer = (props) => {
     </Container>
   );
 };
+
+

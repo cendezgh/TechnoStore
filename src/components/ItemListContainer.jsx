@@ -11,8 +11,6 @@ export const ItemListContainer = (props) => {
 
   const { id: category } = useParams();
 
-  console.log(category)
-
   useEffect(() => {
     const fetchProducts = async () => {
       const db = getFirestore();

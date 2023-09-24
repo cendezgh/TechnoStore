@@ -11,7 +11,11 @@ export const Cart = () => {
     email: "",
   });
 
-  const { items, removeItem } = useContext(CartContext);
+  const { clear, items, removeItem } = useContext(CartContext);
+
+  if(items.length === 0){
+    return <h1>El carrito está vacio</h1>
+  }
 
   const total = () =>
     items.reduce(
@@ -38,6 +42,12 @@ export const Cart = () => {
 
     addDoc(orderCollection, order).then(({ id }) => {
       if (id) {
+        setFormValues({
+          name: "",
+          phone: "",
+          email: "",
+        });
+        clear();
         alert("Su order: " + id + " ha sido creada!");
       }
     });
@@ -58,7 +68,7 @@ export const Cart = () => {
           {items.map((item) => (
             <tr key={item.id}>
               <td>
-                {item.categoryId} {item.marca}
+                {item.nombre}
               </td>
               <td>{item.precio}</td>
               <td>{item.quantity}</td>
@@ -86,6 +96,7 @@ export const Cart = () => {
             type="text"
             name="name"
             placeholder="Nombre"
+            required
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -96,6 +107,7 @@ export const Cart = () => {
             type="email"
             name="email"
             placeholder="name@example.com"
+            required
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -106,6 +118,7 @@ export const Cart = () => {
             type="text"
             name="phone"
             placeholder="000 000 0000"
+            required
           />
         </Form.Group>
         <Button variant="secondary" type="button" onClick={sendOrder}>

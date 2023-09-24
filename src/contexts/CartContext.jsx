@@ -6,7 +6,6 @@ export const CartProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const addItem = (product, quantity) => {
     const alreadyExists = items.some(item => item.id === product.id);
-    console.log(alreadyExists);
     if(!alreadyExists) setItems(prev => [...prev, {...product, quantity }])
     else {
         const actualizarProductos = items.map(item => {

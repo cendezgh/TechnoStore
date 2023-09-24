@@ -8,6 +8,6 @@ export const CartWidget = () => {
   return (
   <Link to="/cart">
     <img src={cartIcon} alt="Cart" />
-    <span>{totalWidget}</span>
+    <span className="quantityCart">{totalWidget}</span>
   </Link>
 )};

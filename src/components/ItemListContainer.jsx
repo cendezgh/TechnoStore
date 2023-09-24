@@ -11,6 +11,8 @@ export const ItemListContainer = (props) => {
 
   const { id: category } = useParams();
 
+  console.log(category)
+
   useEffect(() => {
     const fetchProducts = async () => {
       const db = getFirestore();
@@ -45,7 +47,7 @@ export const ItemListContainer = (props) => {
 
   return (
     <Container className="mt-4">
-      <h1>{props.greeting}</h1>
+      <h1>{category ? category : props.greeting}</h1>
       <div
         style={{
           display: "flex",
@@ -59,5 +61,6 @@ export const ItemListContainer = (props) => {
     </Container>
   );
 };
+
 
 

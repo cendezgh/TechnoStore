@@ -1,8 +1,13 @@
-import carrito from "../assets/cart-icon.webp";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import cartIcon from "../assets/cart-icon.webp";
+import { CartContext } from "../contexts/CartContext";
 
-export const CartWidget = () => (
-  <>
-    <img src={carrito} alt="Cart" />
-    <span>23</span>
-  </>
-);
+export const CartWidget = () => {
+  const { totalWidget } = useContext(CartContext)
+  return (
+  <Link to="/cart">
+    <img src={cartIcon} alt="Cart" />
+    <span>{totalWidget}</span>
+  </Link>
+)};

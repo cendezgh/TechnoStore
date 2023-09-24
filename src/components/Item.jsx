@@ -7,9 +7,10 @@ export const Item = ({object}) => (
       <Card.Img variant="top" src={object.imagen} />
       <Card.Body>
         <Card.Title>
-          {object.category} {object.marca}
+          {object.categoryId} {object.marca}
         </Card.Title>
-        <Card.Text>{object.description}</Card.Text>
+        <Card.Text>Stock: {object.stock}</Card.Text>
+        <Card.Text>Precio: {object.precio}</Card.Text>
         <Link to={`/item/${object.id}`}>
           <Button variant="secondary" >Ver detalle</Button>
         </Link>

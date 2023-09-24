@@ -5,11 +5,6 @@ import { CartWidget } from "./CartWidget";
 import { Link } from "react-router-dom";
 import data from "../data/objects.json";
 import { NavLink } from "react-router-dom";
-// import { getFirestore, getDocs, collection } from "firebase/firestore";
-
-// const db = getFirestore()
-
-// const refCollection = collection(db, "productos")
 
 const categoriesArray = data.map(item => item.category);
 const uniqueCategories = new Set(categoriesArray); 

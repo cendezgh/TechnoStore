@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import { getFirestore, getDocs, collection } from "firebase/firestore";
 
-// import data from "../data/objects.json"; 
 import { ItemList } from "./ItemList";
 
 export const ItemListContainer = (props) => {
@@ -31,22 +30,6 @@ export const ItemListContainer = (props) => {
         setLoading(false);
       });
   }, [id]);
-
-  // useEffect(() => {
-  //   const promise = new Promise((resolve, reject) => {
-  //     setTimeout(() => resolve(data), 2000);
-  //   });
-  //   promise.then((data) => {
-  //     if (!id) {
-  //       setObjects(data);
-  //     } else {
-  //       const objectsFiltered = data.filter((object) => object.category === id);
-  //       setObjects(objectsFiltered);
-  //     }      
-  //   }).finally(() => {
-  //     setLoading(false);
-  //   });
-  // }, [id]);
 
   if(loading) return <div>Loading...</div>
 

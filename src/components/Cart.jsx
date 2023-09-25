@@ -1,8 +1,9 @@
 import { Container, Table } from "react-bootstrap";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { CartContext } from "../contexts/CartContext";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { Navigate } from "react-router-dom";
 
 export const Cart = () => {
   const [formValues, setFormValues] = useState({
@@ -13,10 +14,33 @@ export const Cart = () => {
 
   const { clear, items, removeItem } = useContext(CartContext);
 
-  if(items.length === 0){
-    return <h1>El carrito está vacio</h1>
+  const [redirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+    if (items.length === 0) {
+      setTimeout(() => {
+        setRedirect(true);
+      }, 4000);
+    }
+  }, [items]);
+
+  if (redirect) {
+    return <Navigate to="/" />;
   }
 
+  if (items.length === 0) {
+    return (
+      <Container>
+        <h1>El carrito está vacio.</h1>
+        <p style={{textAlign: "center"}}> Serás redireccionado al home en unos segundos...</p>
+        <div className="divSpinner">
+          <Spinner animation="border" variant="secondary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      </Container>
+    );
+  }
   const total = () =>
     items.reduce(
       (acumulador, valorActual) =>
@@ -24,13 +48,19 @@ export const Cart = () => {
       0
     );
 
-  const handleChange = ev => {
-    setFormValues(prev => ({
-      ...prev, [ev.target.name]: ev.target.value
-    }))
+  const handleChange = (ev) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [ev.target.name]: ev.target.value,
+    }));
   };
 
   const sendOrder = () => {
+    if (!formValues.name || !formValues.phone || !formValues.email) {
+      alert("Por favor, completa todos los campos requeridos.");
+      return;
+    };
+
     const order = {
       buyer: formValues,
       items,
@@ -59,6 +89,7 @@ export const Cart = () => {
         <thead>
           <tr>
             <th>Nombre</th>
+            <th>Marca</th>
             <th>Precio</th>
             <th>Cantidad</th>
             <th></th>
@@ -67,13 +98,18 @@ export const Cart = () => {
         <tbody>
           {items.map((item) => (
             <tr key={item.id}>
-              <td>
-                {item.nombre}
-              </td>
+              <td>{item.nombre}</td>
+              <td>{item.marca}</td>
               <td>{item.precio}</td>
               <td>{item.quantity}</td>
               <td>
-                <button onClick={() => removeItem(item.id)}>Eliminar</button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => removeItem(item.id)}
+                >
+                  Eliminar
+                </Button>
               </td>
             </tr>
           ))}
@@ -81,6 +117,7 @@ export const Cart = () => {
         <tfoot>
           <tr>
             <td>Total</td>
+            <td></td>
             <td></td>
             <td></td>
             <td>{total()}</td>
@@ -96,7 +133,6 @@ export const Cart = () => {
             type="text"
             name="name"
             placeholder="Nombre"
-            required
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -107,7 +143,6 @@ export const Cart = () => {
             type="email"
             name="email"
             placeholder="name@example.com"
-            required
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -118,14 +153,12 @@ export const Cart = () => {
             type="text"
             name="phone"
             placeholder="000 000 0000"
-            required
           />
         </Form.Group>
         <Button variant="secondary" type="button" onClick={sendOrder}>
           Comprar
         </Button>
       </Form>
-      {/* <button onClick={sendOrder}>Comprar</button> */}
     </Container>
   );
 };

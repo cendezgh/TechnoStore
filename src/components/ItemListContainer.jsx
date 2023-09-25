@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import { getFirestore, getDocs, collection, query, where } from "firebase/firestore";
+import { Spinner } from "react-bootstrap";
 
 import { ItemList } from "./ItemList";
 
@@ -41,7 +42,9 @@ export const ItemListContainer = (props) => {
     fetchProducts();
   }, [category]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="divSpinner"><Spinner animation="border" variant="secondary" role="status">
+  <span className="visually-hidden">Loading...</span>
+</Spinner></div>;
 
   return (
     <Container className="mt-4">
